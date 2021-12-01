@@ -1,0 +1,66 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package com.github.leungsteve.kafka.tutorial1;
+
+import java.io.PrintStream;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Properties;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ConsumerDemo {
+    public ConsumerDemo() {
+    }
+
+    public static void main(String[] args) {
+        Logger logger = LoggerFactory.getLogger(ConsumerDemo.class.getName());
+        String bootstrapServers = "127.0.0.1:9092";
+        String groupId = "reviews_to_db";
+        String topic = "test";
+        Properties properties = new Properties();
+        properties.setProperty("bootstrap.servers", bootstrapServers);
+        properties.setProperty("key.deserializer", StringDeserializer.class.getName());
+        properties.setProperty("value.deserializer", StringDeserializer.class.getName());
+        properties.setProperty("group.id", groupId);
+        properties.setProperty("auto.offset.reset", "earliest");
+        KafkaConsumer<String, String> consumer = new KafkaConsumer(properties);
+        consumer.subscribe(Arrays.asList(topic));
+
+        while(true) {
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100L));
+            Iterator var8 = records.iterator();
+
+            String var10001;
+            ConsumerRecord record;
+            int var10;
+            while(var8.hasNext()) {
+                record = (ConsumerRecord)var8.next();
+                var10001 = (String)record.key();
+                logger.info("Key: " + var10001 + ", Value: " + (String)record.value());
+                var10 = record.partition();
+                logger.info("Partition: " + var10 + ", Offset:" + record.offset());
+            }
+
+            var8 = records.iterator();
+
+            while(var8.hasNext()) {
+                record = (ConsumerRecord)var8.next();
+                PrintStream var10000 = System.out;
+                var10001 = (String)record.key();
+                var10000.println("Key: " + var10001 + ", Value: " + (String)record.value());
+                var10000 = System.out;
+                var10 = record.partition();
+                var10000.println("Partition: " + var10 + ", Offset:" + record.offset());
+            }
+        }
+    }
+}
