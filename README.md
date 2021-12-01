@@ -5,7 +5,7 @@ This application performs the following:
 - for each message:
 -   GETs a sentiment from the sentiment service
 -   Appends the sentiment to the message
--   PUTs the document in MongoDB, in the O11y DB and the O11yCollection collection
+-   Inserts the document in MongoDB, in the O11y DB and the O11yCollection collection
 
 Kafka headers are populated by the producer with trace details. For example:
 ```
